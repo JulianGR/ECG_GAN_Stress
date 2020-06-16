@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division
 """
 Copy of GAN with Generator: LSTM, Discriminator: Convolutional NN with ECG Data
 
@@ -15,7 +16,6 @@ Copy of GAN with Generator: LSTM, Discriminator: Convolutional NN with ECG Data
 """
 Bringing in required dependencies as defined in the GitHub repo: 
     https://github.com/josipd/torch-two-sample/blob/master/torch_two_sample/permutation_test.pyx"""
-from __future__ import division
 
 import torch
 from tqdm import tqdm
@@ -39,14 +39,7 @@ import os
 from data import ECGData, PD_to_Tensor
 from Model import Generator, Discriminator 
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-
-if device == 'cuda:0':
-    print('Using GPU : ')
-    print(torch.cuda.get_device_name(device))
-else :
-    print('Using CPU')
-
+device = torch.device('cuda:0')
 
 """#MMD Evaluation Metric Definition
 Using MMD to determine the similarity between distributions
@@ -321,8 +314,8 @@ p2_s = 2
 
 minibatch_out = [0,3,5,8,10]
 for minibatch_layer in minibatch_out:
-  path = ".../your_path/Run_"+str(today.strftime("%d_%m_%Y"))+"_"+ str(datetime.datetime.now().time()).split('.')[0]
-  os.mkdir(path)
+  path = "./your_path/Run_"+str(today.strftime("%d_%m_%Y"))+"_"+ str(datetime.datetime.now().time()).split('.')[0]
+  os.makedirs(path)
   
   dict = {'data' : source_filename, 
           'sample_size' : sample_size, 
