@@ -16,7 +16,7 @@ import torch
 from torch.utils.data import Dataset
 import pandas as pd
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda:0')
 
 class ECGData(Dataset):
   #This is the class for the ECG Data that we need to load, transform and then use in the dataloader.
