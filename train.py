@@ -81,6 +81,7 @@ def pdist(sample_1, sample_2, norm=2, eps=1e-5):
         inner = torch.sum(differences, dim=2, keepdim=False)
         return (eps + inner) ** (1. / norm)
 
+
 def permutation_test_mat(matrix,
                          n_1,  n_2,  n_permutations,
                           a00=1,  a11=1,  a01=0):
@@ -430,17 +431,19 @@ for minibatch_layer in minibatch_out:
                 h_g = generator_1.init_hidden()
                 generated_data = generator_1.forward(noise_sample_test,h_g).detach().squeeze()
                 generated_sample = torch.cat((generated_sample,generated_data),dim = 0)
-             
-              
-              # Getting the MMD Statistic for each Training Epoch
+
+                # Getting the MMD Statistic for each Training Epoch
               generated_sample = generated_sample[1:][:]
-              sigma = [pairwisedistances(ecg_data_test[:18088].type(torch.DoubleTensor),generated_sample.type(torch.DoubleTensor).squeeze())] 
-              mmd = MMDStatistic(len(ecg_data_test[:18088]),generated_sample.size(0))
-              mmd_eval = mmd(ecg_data_test[:18088].type(torch.DoubleTensor),generated_sample.type(torch.DoubleTensor).squeeze(),sigma, ret_matrix=False)
+              test1 = ecg_data_test[:18088].type(torch.FloatTensor)
+              test2 = generated_sample.squeeze().cpu()
+
+              sigma = [pairwisedistances(test1, test2)]
+
+              mmd = MMDStatistic(len(ecg_data_test[:18088]), generated_sample.size(0))
+              mmd_eval = mmd(test1, test2, sigma, ret_matrix=False)
               mmd_list.append(mmd_eval.item())
-              
-          
-              series_list = np.append(series_list,fake[0].numpy().reshape((1,seq_length)),axis=0)
+
+              series_list = np.append(series_list, fake[0].numpy().reshape((1, seq_length)), axis=0)
           
   #Dumping the errors and mmd evaluations for each training epoch.
   with open(path+'/generator_losses.txt', 'wb') as fp:
