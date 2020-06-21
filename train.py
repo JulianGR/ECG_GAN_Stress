@@ -426,7 +426,7 @@ for minibatch_layer in minibatch_out:
               fake = generator_1(noise(len(sample_data), seq_length),h_g).detach().cpu()
               generated_sample = torch.zeros(1,seq_length).to(device)
               
-              for iter in range(0,int(len(ecg_data_test[:18088])/sample_size)):
+              for iter in range(0,int(len(ecg_data_test[:18188])/sample_size)):
                 noise_sample_test = noise(sample_size, seq_length)
                 h_g = generator_1.init_hidden()
                 generated_data = generator_1.forward(noise_sample_test,h_g).detach().squeeze()
@@ -434,12 +434,12 @@ for minibatch_layer in minibatch_out:
 
                 # Getting the MMD Statistic for each Training Epoch
               generated_sample = generated_sample[1:][:]
-              test1 = ecg_data_test[:18088].type(torch.FloatTensor)
+              test1 = ecg_data_test[:18188].type(torch.FloatTensor)
               test2 = generated_sample.squeeze().cpu()
 
               sigma = [pairwisedistances(test1, test2)]
 
-              mmd = MMDStatistic(len(ecg_data_test[:18088]), generated_sample.size(0))
+              mmd = MMDStatistic(len(ecg_data_test[:18188]), generated_sample.size(0))
               mmd_eval = mmd(test1, test2, sigma, ret_matrix=False)
               mmd_list.append(mmd_eval.item())
 
@@ -462,6 +462,7 @@ for minibatch_layer in minibatch_out:
   plt.close() 
   
   #Plot a figure for each training epoch with the MMD value in the title
+  """
   i = 0
   while i < num_epoch:
     if i%3==0:
@@ -474,6 +475,7 @@ for minibatch_layer in minibatch_out:
      
     plt.savefig(path+'/Training_Epoch_Samples_MMD_'+str(i)+'.png')
     plt.close(fig) 
+   """
   #Checking the diversity of the samples:
   generator_1.eval()
   h_g = generator_1.init_hidden()
