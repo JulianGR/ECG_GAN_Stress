@@ -1,0 +1,43 @@
+1.- download data from the database
+2.- remove all folders inside and the SHA file (useless)
+3.- remove files with extension .at_ or .at- because they are old .atr files and the updated ones are now called .atr
+4.- remove file 102-0.atr because is an old file and the new one is 102.atr
+5.- remove *.xws
+
+	joint command: sudo rm -r ./mitdbdir ./x_mitdb *.xws *.at_ *.at- 102-0.atr
+
+6.- install needed software for reading: https://archive.physionet.org/physiotools/wfdb.shtml
+7.- queries: now we are going to read/ write data using commands from the installed package. Complete list of programs can be found here: https://archive.physionet.org/physiotools/wag/
+	7.1.- for basic visualization of ANNOTATIONS we can use 
+			rdann -r 100 [or whichever record] -a atr -v
+		and for description of the record we can use 
+			wfdbdesc 100 [or whichever record]
+		and for visualization of the SIGNAL we can use
+		rdsamp -r mitdb/100 -H -f 0 -t 60 -v -pd -s 0
+	7.2.- this web helps us at composing the quieries: https://archive.physionet.org/cgi-bin/atm/ATM
+
+==============PREPROCESSING================
+
+expected steps:
+DONE 1.- M2 lead only
+NOT TO BE DONE 2.- Remove 200 aud/mV gain
+DONE 3.- Resample 360 Hz to 125 Hz
+4.- 10s split
+5.- Normalization
+6.- Detection of local maximuns with first derivative
+7.- Filtering 0.9 as R peaks
+8.- Median of time RR peaks as T and selecting 1.2T since the beginning of each pair of RR peaks
+9.- Padding unit 187 with zeroes (column 188 is for annotations)
+* 10.- Resampling again to 60 Hz
+
+
+Select only signal 1 (M2 lead), resampling to 125 Hz and 1 adu/mV gain (cannot establish 0 and 1 is not significant)
+
+
+	xform -i 100[DO IT WITH EVERY SINGLE SIGNAL]
+	
+	
+	rdsamp -r 100 -H -f 0 -t 10 -v -pd -s 0 >samples.txt
+	
+	
+	
