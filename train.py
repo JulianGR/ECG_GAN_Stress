@@ -250,7 +250,7 @@ Creating the training set of sine/ECG signals
 """
 
 #Taking normal ECG data for now
-source_filename = './mitbih_train.csv'
+source_filename = './bitalino_train.csv'
 ecg_data = GetECGData(source_file = source_filename,class_id = 0)
 
 sample_size = 119 #batch size needed for Data Loader and the noise creator function.
@@ -263,7 +263,7 @@ num_batches = len(data_loader)
 print(num_batches)
 
 """Creating the Test Set"""
-test_filename =  './mitbih_test.csv'
+test_filename =  './bitalino_test.csv'
 
 ecg_data_test = GetECGData(source_file = test_filename,class_id = 0)
 
