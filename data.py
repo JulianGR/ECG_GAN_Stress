@@ -23,8 +23,8 @@ class ECGData(Dataset):
   def __init__(self,source_file,class_id, transform = None):
     self.source_file = source_file
     data = pd.read_csv(source_file, header = None)
-    class_data = data[data[129]==class_id]
-    self.data = class_data.drop(class_data.iloc[:,129],axis=1)
+    class_data = data[data[139]==class_id]
+    self.data = class_data.drop(class_data.iloc[:,139],axis=1)
     self.transform = transform
     self.class_id = class_id
     
