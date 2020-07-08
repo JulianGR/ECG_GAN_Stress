@@ -31,6 +31,8 @@ import datetime
 from datetime import date
 today = date.today()
 
+import csv
+
 import random
 import json as js
 import pickle
@@ -251,7 +253,7 @@ Creating the training set of sine/ECG signals
 
 #Taking normal ECG data for now
 source_filename = './bitalino_train.csv'
-#source_filename = './mitbih_train.csv'
+
 ecg_data = GetECGData(source_file = source_filename,class_id = 0)
 
 sample_size = 99 #batch size needed for Data Loader and the noise creator function.
@@ -263,15 +265,15 @@ data_loader = torch.utils.data.DataLoader(ecg_data, batch_size=sample_size, shuf
 num_batches = len(data_loader)
 print(num_batches)
 
-ROWS = 15936
+
 
 """Creating the Test Set"""
 test_filename =  './bitalino_test.csv'
-#test_filename =  './mitbih_test.csv'
+
 
 ecg_data_test = GetECGData(source_file = test_filename,class_id = 0)
 
-data_loader_test = torch.utils.data.DataLoader(ecg_data_test[:ROWS], batch_size=sample_size, shuffle=True)
+data_loader_test = torch.utils.data.DataLoader(ecg_data_test[:], batch_size=sample_size, shuffle=True)
 
 
 
@@ -294,7 +296,7 @@ tanh_layer = False
 #No. of training rounds per epoch
 D_rounds = 3
 G_rounds = 1
-num_epoch = 35
+num_epoch = 60
 learning_rate = 0.0002
 
 #Params for the Discriminator
@@ -317,7 +319,7 @@ p2_s = 2
 ##Generator and Discriminator training phase
 """
 
-minibatch_out = [0,3,5,8,10]
+minibatch_out = [0, 1, 2, 3, 5, 8, 10, 12, 16, 32, 64, 99]
 for minibatch_layer in minibatch_out:
   path = "./your_path/Run_"+str(today.strftime("%d_%m_%Y"))+"_"+ str(datetime.datetime.now().time()).split('.')[0]
   os.makedirs(path)
@@ -430,7 +432,7 @@ for minibatch_layer in minibatch_out:
               fake = generator_1(noise(len(sample_data), seq_length),h_g).detach().cpu()
               generated_sample = torch.zeros(1,seq_length).to(device)
               
-              for iter in range(0,int(len(ecg_data_test[:ROWS])/sample_size)):
+              for iter in range(0,int(len(ecg_data_test[:])/sample_size)):
                 noise_sample_test = noise(sample_size, seq_length)
                 h_g = generator_1.init_hidden()
                 generated_data = generator_1.forward(noise_sample_test,h_g).detach().squeeze()
@@ -438,24 +440,27 @@ for minibatch_layer in minibatch_out:
 
                 # Getting the MMD Statistic for each Training Epoch
               generated_sample = generated_sample[1:][:]
-              test1 = ecg_data_test[:ROWS].type(torch.FloatTensor)
+              test1 = ecg_data_test[:].type(torch.FloatTensor)
               test2 = generated_sample.squeeze().cpu()
 
               sigma = [pairwisedistances(test1, test2)]
 
-              mmd = MMDStatistic(len(ecg_data_test[:ROWS]), generated_sample.size(0))
+              mmd = MMDStatistic(len(ecg_data_test[:]), generated_sample.size(0))
               mmd_eval = mmd(test1, test2, sigma, ret_matrix=False)
               mmd_list.append(mmd_eval.item())
 
               series_list = np.append(series_list, fake[0].numpy().reshape((1, seq_length)), axis=0)
           
   #Dumping the errors and mmd evaluations for each training epoch.
-  with open(path+'/generator_losses.txt', 'wb') as fp:
-      pickle.dump(G_losses, fp)
-  with open(path+'/discriminator_losses.txt', 'wb') as fp:
-      pickle.dump(D_losses, fp)   
-  with open(path+'/mmd_list.txt', 'wb') as fp:
-      pickle.dump(mmd_list, fp)
+  with open(path+'/generator_losses.txt', 'w', newline='', encoding='utf-8') as f_output1:
+    wr = csv.writer(f_output1)   
+    wr.writerow(G_losses)
+  with open(path+'/discriminator_losses.txt', 'w', newline='', encoding='utf-8') as f_output2:
+    wr = csv.writer(f_output2)   
+    wr.writerow(D_losses)
+  with open(path+'/mmd_list.txt', 'w', newline='', encoding='utf-8') as f_output3:
+    wr = csv.writer(f_output3)   
+    wr.writerow(mmd_list)
   
   #Plotting the error graph
   plt.plot(G_losses,'-r',label='Generator Error')
@@ -466,7 +471,7 @@ for minibatch_layer in minibatch_out:
   plt.close() 
   
   #Plot a figure for each training epoch with the MMD value in the title
-  """
+  
   i = 0
   while i < num_epoch:
     if i%3==0:
@@ -479,7 +484,7 @@ for minibatch_layer in minibatch_out:
      
     plt.savefig(path+'/Training_Epoch_Samples_MMD_'+str(i)+'.png')
     plt.close(fig) 
-   """
+   
   #Checking the diversity of the samples:
   generator_1.eval()
   h_g = generator_1.init_hidden()
@@ -494,3 +499,12 @@ for minibatch_layer in minibatch_out:
   plt.plot(gen_data[random.randint(0,sample_size-1)].tolist(),'-', color = 'orange')
   plt.savefig(path+'/Generated_Data_Sample1.png')
   plt.close()
+
+
+  if num_epoch == 60:
+    with open(path+'/test.txt', 'a', newline='', encoding='utf-8') as f_output4:
+      i = 0
+      while i < 50000:
+        wr = csv.writer(f_output4)   
+        wr.writerow(gen_data[random.randint(0,sample_size-1)].tolist())
+        i = i + 1
