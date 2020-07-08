@@ -271,7 +271,7 @@ test_filename =  './bitalino_test.csv'
 
 ecg_data_test = GetECGData(source_file = test_filename,class_id = 0)
 
-data_loader_test = torch.utils.data.DataLoader(ecg_data_test[:16227], batch_size=sample_size, shuffle=True)
+data_loader_test = torch.utils.data.DataLoader(ecg_data_test[:ROWS], batch_size=sample_size, shuffle=True)
 
 
 
