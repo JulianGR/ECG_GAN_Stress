@@ -254,7 +254,7 @@ source_filename = './bitalino_train.csv'
 #source_filename = './mitbih_train.csv'
 ecg_data = GetECGData(source_file = source_filename,class_id = 0)
 
-sample_size = 119 #batch size needed for Data Loader and the noise creator function.
+sample_size = 99 #batch size needed for Data Loader and the noise creator function.
 
 # Create loader with data, so that we can iterate over it
 
