@@ -251,6 +251,7 @@ Creating the training set of sine/ECG signals
 
 #Taking normal ECG data for now
 source_filename = './bitalino_train.csv'
+#source_filename = './mitbih_train.csv'
 ecg_data = GetECGData(source_file = source_filename,class_id = 0)
 
 sample_size = 119 #batch size needed for Data Loader and the noise creator function.
@@ -262,8 +263,11 @@ data_loader = torch.utils.data.DataLoader(ecg_data, batch_size=sample_size, shuf
 num_batches = len(data_loader)
 print(num_batches)
 
+ROWS = 15936
+
 """Creating the Test Set"""
 test_filename =  './bitalino_test.csv'
+#test_filename =  './mitbih_test.csv'
 
 ecg_data_test = GetECGData(source_file = test_filename,class_id = 0)
 
@@ -426,7 +430,7 @@ for minibatch_layer in minibatch_out:
               fake = generator_1(noise(len(sample_data), seq_length),h_g).detach().cpu()
               generated_sample = torch.zeros(1,seq_length).to(device)
               
-              for iter in range(0,int(len(ecg_data_test[:16227])/sample_size)):
+              for iter in range(0,int(len(ecg_data_test[:ROWS])/sample_size)):
                 noise_sample_test = noise(sample_size, seq_length)
                 h_g = generator_1.init_hidden()
                 generated_data = generator_1.forward(noise_sample_test,h_g).detach().squeeze()
@@ -434,12 +438,12 @@ for minibatch_layer in minibatch_out:
 
                 # Getting the MMD Statistic for each Training Epoch
               generated_sample = generated_sample[1:][:]
-              test1 = ecg_data_test[:16227].type(torch.FloatTensor)
+              test1 = ecg_data_test[:ROWS].type(torch.FloatTensor)
               test2 = generated_sample.squeeze().cpu()
 
               sigma = [pairwisedistances(test1, test2)]
 
-              mmd = MMDStatistic(len(ecg_data_test[:16227]), generated_sample.size(0))
+              mmd = MMDStatistic(len(ecg_data_test[:ROWS]), generated_sample.size(0))
               mmd_eval = mmd(test1, test2, sigma, ret_matrix=False)
               mmd_list.append(mmd_eval.item())
 
