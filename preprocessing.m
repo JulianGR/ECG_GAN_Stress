@@ -1,14 +1,11 @@
 for i = 0:56
-noProcPartialFilename = 'BitalinoECG_';
-
+noProcPartialFilename = 'prepared_rows_BitalinoECG_';
 
 noProcFilename = append(append(noProcPartialFilename, int2str(i)),'.txt');
 matrix = readmatrix(noProcFilename);
 onlyECG = matrix(:,1);
 
-
-filteredECG = medfilt1(onlyECG);
-normalizedECG = mat2gray(filteredECG);
+normalizedECG = mat2gray(onlyECG);
 
 procPartialFilename= 'bitalino_proc';
 procFilename = append(append(procPartialFilename, int2str(i)), '.csv');
