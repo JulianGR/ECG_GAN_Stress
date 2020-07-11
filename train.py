@@ -256,7 +256,7 @@ source_filename = './bitalino_train.csv'
 
 ecg_data = GetECGData(source_file = source_filename,class_id = 0)
 
-sample_size = 99 #batch size needed for Data Loader and the noise creator function.
+sample_size = 128 #batch size needed for Data Loader and the noise creator function.
 
 # Create loader with data, so that we can iterate over it
 
@@ -319,7 +319,7 @@ p2_s = 2
 ##Generator and Discriminator training phase
 """
 
-minibatch_out = [0, 1, 2, 3, 5, 8, 10, 12, 16, 32, 64, 99]
+minibatch_out = [0, 1, 2, 3, 4, 5, 6, 7, 8]
 for minibatch_layer in minibatch_out:
   path = "./your_path/Run_"+str(today.strftime("%d_%m_%Y"))+"_"+ str(datetime.datetime.now().time()).split('.')[0]
   os.makedirs(path)

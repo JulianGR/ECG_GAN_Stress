@@ -18,13 +18,10 @@ def get_max(file_name):
         std_deviation = np.std(data)
 
         global UPPER_THRESHOLD
-        UPPER_THRESHOLD = 1.25 * std_deviation + avg
+        UPPER_THRESHOLD = 1 * std_deviation + avg
 
         global UNDER_THRESHOLD
-        UNDER_THRESHOLD = avg - 1 * std_deviation
-
-        print(UPPER_THRESHOLD)
-        print(UNDER_THRESHOLD)
+        UNDER_THRESHOLD = avg - 0.5 * std_deviation
 
 
 def clean(file_name):
@@ -34,17 +31,21 @@ def clean(file_name):
         data_unp = list(file)
         data = np.array(data_unp, dtype=np.float32)
 
-        r = 0
+        i = 0
         reached_peak = False
+
         while not reached_peak:
-            if float(data[r][0]) > UPPER_THRESHOLD:
+            over_th = float(data[i][0]) > UPPER_THRESHOLD
+            next_smaller = data[i][0] > data[i - 1][0]
+            next_under_th = (float(data[i + 1][0]) < UNDER_THRESHOLD) | (float(data[i + 2][0]) < UNDER_THRESHOLD)
+
+            if over_th & next_smaller & next_under_th:
                 reached_peak = True
 
-            else:
-                r = r + 1
+            i = i + 1
 
         csv_output = csv.writer(f_output)
-        csv_output.writerows(data[r:None])
+        csv_output.writerows(data[i:None])
     return 'clean_' + file_name
 
 
@@ -53,22 +54,18 @@ def peaks(file_name):
     with open(file_name, newline='', encoding='utf-8') as csvfile, open('peaks_' + file_name, 'w', newline='',
                                                                         encoding='utf-8') as f_output:
         file = csv.reader(csvfile)
-        data = list(file)
+        data_unp = list(file)
+        data = np.array(data_unp, dtype=np.float32)
 
         i = 0
         while i < len(data) - 2:
 
-            if float(data[i][0]) > UPPER_THRESHOLD:
-                if data[i][0] > data[i + 1][0]:
-                    if (float(data[i + 1][0]) < UNDER_THRESHOLD) | (float(data[i + 2][0]) < UNDER_THRESHOLD) | (float(data[i + 3][0]) < UNDER_THRESHOLD):
-                        peaks_index_list.append(i)
-                        data.pop(i + 1)
-                        i = i - 1
+            over_th = float(data[i][0]) > UPPER_THRESHOLD
+            next_smaller = data[i][0] > data[i - 1][0]
+            next_under_th = (float(data[i + 1][0]) < UNDER_THRESHOLD) | (float(data[i + 2][0]) < UNDER_THRESHOLD)
 
-            if float(data[i][0]) < UNDER_THRESHOLD:
-                if data[i][0] < data[i + 1][0]:
-                    data.pop(i + 1)
-                    i = i - 1
+            if over_th & next_smaller & next_under_th:
+                peaks_index_list.append(i)
 
             i = i + 1
         csv_output = csv.writer(f_output)
@@ -156,12 +153,14 @@ def main():
 
         peaks_list.append(len(peaks_index_list))
         one_dot_two_list.append(one_dot_two_t)
-        print("======" + str(i) + "=====")
-        print(peaks_list)
-        print(one_dot_two_list)
-        print(max(peaks_list))
-        print(sum(peaks_list) / len(peaks_list))
-        print(max(one_dot_two_list))
+        print("=========" + str(i) + "========")
+        print("UPPER_THRESHOLD: " + str(UPPER_THRESHOLD))
+        print("UNDER_THRESHOLD: " + str(UNDER_THRESHOLD))
+        print("peaks_list: " + str(peaks_list))
+        print("one_dot_two_list: " + str(one_dot_two_list))
+        print("max(peaks_list): " + str(max(peaks_list)))
+        print("sum(peaks_list) / len(peaks_list): " + str(sum(peaks_list) / len(peaks_list)))
+        print("max(one_dot_two_list): " + str(max(one_dot_two_list)))
 
         i = i + 1
 
