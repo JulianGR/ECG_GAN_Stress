@@ -62,10 +62,12 @@ Group2,Group3,Group4
 
 5.- we pass each file to matlab script
 6.- we pass each file to pyhton script
+7.- shuffle each file with
 
-	
 	for f in *.csv;  do shuf -o shuffled_${f} < ${f}; done;
+	
+8.- merge the files of each group into 3 csv with  http://merge-csv.com/
 
-7.- we group the files into three folders
+9.- shuffle again the merged file for more data decorrelation
 
-8.- we train the GAN
+10.- we train the GAN

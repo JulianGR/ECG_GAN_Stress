@@ -187,7 +187,6 @@ def main():
 
         i = i + 1
 
-# merge all in http://merge-csv.com/
 
 if __name__ == "__main__":
     main()
