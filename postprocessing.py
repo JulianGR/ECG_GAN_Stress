@@ -18,10 +18,18 @@ def get_max(file_name):
         std_deviation = np.std(data)
 
         global UPPER_THRESHOLD
-        UPPER_THRESHOLD = 1 * std_deviation + avg
-
         global UNDER_THRESHOLD
-        UNDER_THRESHOLD = avg - 0.5 * std_deviation
+
+        if std_deviation > 0.075:
+            UPPER_THRESHOLD = 1 * std_deviation + avg
+            UNDER_THRESHOLD = avg - 0.2 * std_deviation
+
+        else:
+            UPPER_THRESHOLD = 1.2 * std_deviation + avg
+            UNDER_THRESHOLD = avg - 0.6 * std_deviation
+
+
+
 
 
 def clean(file_name):
@@ -75,6 +83,7 @@ def peaks(file_name):
 
 def get_avg_distance_peaks(peaks_index_list):
     i = 0
+    skip_file = False
     distance_t = []
     while i <= len(peaks_index_list) - 2:
         distance_t.append(peaks_index_list[i + 1] - peaks_index_list[i])
@@ -82,7 +91,10 @@ def get_avg_distance_peaks(peaks_index_list):
 
     t = sum(distance_t) / len(distance_t)
     one_dot_two_t = ceil(1.2 * t)
-    return one_dot_two_t
+
+    if one_dot_two_t > 150:
+        skip_file = True
+    return one_dot_two_t, skip_file
 
 
 def transpose_csv(file_name):
@@ -114,8 +126,8 @@ def padding(cut_file, file_name):
         data = []
         for row in file:
             data.append(row)
-            n = 140 - len(data[0])
-            list_of_zeros = [0] * n
+            n = 150 - len(data[0])
+            list_of_zeros = [0.0000] * n
             wr = csv.writer(f_output)
             tmp = data[0] + list_of_zeros
             wr.writerow(tmp)
@@ -133,15 +145,25 @@ def mark(file_name):
 def main():
     one_dot_two_list = []
     peaks_list = []
+    skipped_file=[]
 
     i = 0
     while i <= 56:
         file_name = "bitalino_proc" + str(i) + ".csv"
         transposed_file = transpose_csv(file_name)
         get_max(transposed_file)
+        os.remove(transposed_file)
         clean_file = clean(file_name)
         peaks_index_list, peaks_file = peaks(clean_file)
-        one_dot_two_t = get_avg_distance_peaks(peaks_index_list)
+        one_dot_two_t, skip_file = get_avg_distance_peaks(peaks_index_list)
+
+        if skip_file:
+            skipped_file.append(file_name)
+            os.remove(clean_file)
+            os.remove(peaks_file)
+            i = i + 1
+            continue
+
         transposed_file = transpose_csv(peaks_file)
         cut_file = cut(transposed_file, one_dot_two_t, peaks_index_list)
         padding(cut_file, file_name)
@@ -161,9 +183,9 @@ def main():
         print("max(peaks_list): " + str(max(peaks_list)))
         print("sum(peaks_list) / len(peaks_list): " + str(sum(peaks_list) / len(peaks_list)))
         print("max(one_dot_two_list): " + str(max(one_dot_two_list)))
+        print("Skipped files: " + str(skipped_file))
 
         i = i + 1
-
 
 # merge all in http://merge-csv.com/
 

@@ -62,6 +62,10 @@ Group2,Group3,Group4
 
 5.- we pass each file to matlab script
 6.- we pass each file to pyhton script
+
+	
+	for f in *.csv;  do shuf -o shuffled_${f} < ${f}; done;
+
 7.- we group the files into three folders
 
-8.- we train the GAN with 
+8.- we train the GAN
