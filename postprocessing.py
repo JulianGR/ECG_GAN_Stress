@@ -7,7 +7,7 @@ import os
 UPPER_THRESHOLD = 0.55
 UNDER_THRESHOLD = 0.35
 
-
+#set thresholds
 def get_max(file_name):
     with open(file_name, newline='', encoding='utf-8') as csvfile:
         file = csv.reader(csvfile)
@@ -20,6 +20,7 @@ def get_max(file_name):
         global UPPER_THRESHOLD
         global UNDER_THRESHOLD
 
+        #difference between peaks and average too high for other methods to handle
         if std_deviation > 0.075:
             UPPER_THRESHOLD = 1 * std_deviation + avg
             UNDER_THRESHOLD = avg - 0.2 * std_deviation
@@ -28,10 +29,7 @@ def get_max(file_name):
             UPPER_THRESHOLD = 1.2 * std_deviation + avg
             UNDER_THRESHOLD = avg - 0.6 * std_deviation
 
-
-
-
-
+#remove data from the beginning until the first peak of each file
 def clean(file_name):
     with open(file_name, newline='', encoding='utf-8') as csvfile, open('clean_' + file_name, 'w', newline='',
                                                                         encoding='utf-8') as f_output:
@@ -56,7 +54,7 @@ def clean(file_name):
         csv_output.writerows(data[i:None])
     return 'clean_' + file_name
 
-
+#get a list with the indexed of all peaks
 def peaks(file_name):
     peaks_index_list = []
     with open(file_name, newline='', encoding='utf-8') as csvfile, open('peaks_' + file_name, 'w', newline='',
@@ -80,7 +78,7 @@ def peaks(file_name):
         csv_output.writerows(data)
     return peaks_index_list, 'peaks_' + file_name
 
-
+# get average distance between the indexes using the peaks list
 def get_avg_distance_peaks(peaks_index_list):
     i = 0
     skip_file = False
@@ -91,7 +89,7 @@ def get_avg_distance_peaks(peaks_index_list):
 
     t = sum(distance_t) / len(distance_t)
     one_dot_two_t = ceil(1.2 * t)
-
+#there are some files that exceed 150 columns by a lot - they are removed (only happens with a couple of them)
     if one_dot_two_t > 150:
         skip_file = True
     return one_dot_two_t, skip_file
@@ -101,7 +99,7 @@ def transpose_csv(file_name):
     pd.read_csv(file_name, header=None).T.to_csv('transposed_' + file_name, header=False, index=False)
     return 'transposed_' + file_name
 
-
+#cut the series using the peaks list and the average distance
 def cut(file_name, one_dot_two_t, peaks_index_list):
     with open(file_name, newline='', encoding='utf-8') as csvfile, open('cut_' + file_name, 'w', newline='',
                                                                         encoding='utf-8') as f_output:
@@ -118,7 +116,7 @@ def cut(file_name, one_dot_two_t, peaks_index_list):
 
     return 'cut_' + file_name
 
-
+#pad with zeroes until 150 columns (arbitrary* value)
 def padding(cut_file, file_name):
     with open(cut_file, newline='', encoding='utf-8') as csvfile, open('processed_' + file_name, 'w', newline='',
                                                                        encoding='utf-8') as f_output:
@@ -133,7 +131,7 @@ def padding(cut_file, file_name):
             wr.writerow(tmp)
             data = []
 
-
+#debugging function
 def mark(file_name):
     with open(file_name, 'a', newline='', encoding='utf-8') as csvfile, open('processed_' + file_name, 'a', newline='',
                                                                              encoding='utf-8') as f_output:
@@ -145,7 +143,7 @@ def mark(file_name):
 def main():
     one_dot_two_list = []
     peaks_list = []
-    skipped_file=[]
+    skipped_file = []
 
     i = 0
     while i <= 56:

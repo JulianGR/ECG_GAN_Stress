@@ -18,7 +18,7 @@ import pandas as pd
 
 device = torch.device('cuda:0')
 
-COLUMNS = 139
+COLUMNS = 149
 
 
 class ECGData(Dataset):

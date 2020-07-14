@@ -296,7 +296,7 @@ tanh_layer = False
 #No. of training rounds per epoch
 D_rounds = 3
 G_rounds = 1
-num_epoch = 60
+num_epoch, max_epoch = 111
 learning_rate = 0.0002
 
 #Params for the Discriminator
@@ -319,7 +319,7 @@ p2_s = 2
 ##Generator and Discriminator training phase
 """
 
-minibatch_out = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+minibatch_out = [0, 1, 2, 3, 4, 5]
 for minibatch_layer in minibatch_out:
   path = "./your_path/Run_"+str(today.strftime("%d_%m_%Y"))+"_"+ str(datetime.datetime.now().time()).split('.')[0]
   os.makedirs(path)
@@ -474,6 +474,7 @@ for minibatch_layer in minibatch_out:
   
   i = 0
   while i < num_epoch:
+  # TODO  if i%3==0 really? why not for each i?
     if i%3==0:
       fig, ax = plt.subplots(3,1,constrained_layout=True)
       fig.suptitle("Generated fake data")
@@ -501,8 +502,10 @@ for minibatch_layer in minibatch_out:
   plt.close()
 
 
-  if num_epoch == 60:
-    with open(path+'/test.txt', 'a', newline='', encoding='utf-8') as f_output4:
+  if num_epoch == max_epoch:
+  # you have to replace all of "[" and "]" occurences with the replace function of your favourite editor
+  # in order to let the file be a proper cvs file not containing lists
+    with open(path+'/generated_waves.csv', 'a', newline='', encoding='utf-8') as f_output4:
       i = 0
       while i < 50000:
         wr = csv.writer(f_output4)   
