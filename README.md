@@ -1,10 +1,10 @@
 # Repository for the paper "Synthesis of realistic stress ECG using GANs"
 
-I recommend reading the paper in order to get a better graps of the idea and scope of the project. They are under the "docs" folder.
+I recommend reading the paper in order to get a better graps of the idea and scope of the project. They are under the (**docs**)[https://github.com/JulianGR/ECG_GAN_Stress/tree/master/docs] folder.
 
 # Preprocessing
 
-1. Download database from [https://physionet.org/content/ecg-spider-clip/1.0.0/]
+1. Download database from (https://physionet.org/content/ecg-spider-clip/1.0.0/)[https://physionet.org/content/ecg-spider-clip/1.0.0/]
 2. since the database comes in groups, we are going to rename each ECG file from each folder according to this mapping
 
 | **Group2** | **Group3** | **Group4** |
@@ -67,8 +67,8 @@ each file is renamed to
 	for f in rows_*.txt;  do head -n -30000 ${f} > prepared_${f} ; done;	
 	```
 
-5. we pass each file to matlab script
-6. we pass each file to pyhton script
+5. we pass each file to (matlab script)[https://github.com/JulianGR/ECG_GAN_Stress/blob/master/preprocessing.m]
+6. we pass each file to (pyhton script)[https://github.com/JulianGR/ECG_GAN_Stress/blob/master/postprocessing.py]
 7. shuffle each file with
 
 	```
@@ -81,4 +81,4 @@ each file is renamed to
 
 # Usage
 
-Download and import into Google Colab ```gcolab.ipynb``` 
+Download and import into Google Colab (**gcolab.ipynb**)[https://github.com/JulianGR/ECG_GAN_Stress/blob/master/gcolab.ipynb]
