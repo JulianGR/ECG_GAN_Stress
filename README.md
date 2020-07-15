@@ -1,6 +1,6 @@
 # Repository for the paper "Synthesis of realistic stress ECG using GANs"
 
-I recommend reading the paper in order to get a better graps of the idea and scope of the project. They are under the[**docs**](https://github.com/JulianGR/ECG_GAN_Stress/tree/master/docs) folder.
+I recommend reading the paper in order to get a better graps of the idea and scope of the project. They are under the [**docs**](https://github.com/JulianGR/ECG_GAN_Stress/tree/master/docs) folder.
 
 # Preprocessing
 
