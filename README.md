@@ -7,54 +7,28 @@ I recommend reading the paper in order to get a better graps of the idea and sco
 1. Download database from [https://physionet.org/content/ecg-spider-clip/1.0.0/](https://physionet.org/content/ecg-spider-clip/1.0.0/)
 2. since the database comes in groups, we are going to rename each ECG file from each folder according to this mapping
 
-| **Group2** | **Group3** | **Group4** |
-|--------|--------|--------|
-| VP02   | VP03   | VP61   |
-| VP05   | VP06   | VP62   |
-| VP08   | VP09   | VP63   |
-| VP11   | VP12   | VP64   |
-| VP14   | VP15   | VP65   |
-| VP17   | VP18   | VP66   |
-| VP20   | VP24   | VP68   |
-| VP23   | VP27   | VP69   |
-| VP26   | VP30   | VP70   |
-| VP29   | VP33   | VP71   |
-| VP32   | VP36   | VP72   |
-| VP35   | VP39   | VP73   |
-| VP38   | VP42   | VP74   |
-| VP41   | VP45   | VP75   |
-| VP44   | VP48   | VP76   |
-| VP47   | VP51   | VP77   |
-| VP50   | VP54   | VP78   |
-| VP53   | VP57   | VP79   |
-| VP56   |        | VP80   |
-| VP59   |        |        |
-
-each file is renamed to
-
-| **Group2** | **Group3**| **Group4** |
-|--------|--------|--------|
-| 0      | 20     | 38     |
-| 1      | 21     | 39     |
-| 2      | 22     | 40     |
-| 3      | 23     | 41     |
-| 4      | 24     | 42     |
-| 5      | 25     | 43     |
-| 6      | 26     | 44     |
-| 7      | 27     | 45     |
-| 8      | 28     | 46     |
-| 9      | 29     | 47     |
-| 10     | 30     | 48     |
-| 11     | 31     | 49     |
-| 12     | 32     | 50     |
-| 13     | 33     | 51     |
-| 14     | 34     | 52     |
-| 15     | 35     | 53     |
-| 16     | 36     | 54     |
-| 17     | 37     | 55     |
-| 18     |        | 56     |
-| 19     |        |        |
-
+| Group2 -> | Renaming of g2 | Group3 -> | Renaming of g3 | Group4 -> | Renaming of g4 |
+|-----------|----------------|-----------|----------------|-----------|----------------|
+| VP02      | 0              | VP03      | 20             | VP61      | 38             |
+| VP05      | 1              | VP06      | 21             | VP62      | 39             |
+| VP08      | 2              | VP09      | 22             | VP63      | 40             |
+| VP11      | 3              | VP12      | 23             | VP64      | 41             |
+| VP14      | 4              | VP15      | 24             | VP65      | 42             |
+| VP17      | 5              | VP18      | 25             | VP66      | 43             |
+| VP20      | 6              | VP24      | 26             | VP68      | 44             |
+| VP23      | 7              | VP27      | 27             | VP69      | 45             |
+| VP26      | 8              | VP30      | 28             | VP70      | 46             |
+| VP29      | 9              | VP33      | 29             | VP71      | 47             |
+| VP32      | 10             | VP36      | 30             | VP72      | 48             |
+| VP35      | 11             | VP39      | 31             | VP73      | 49             |
+| VP38      | 12             | VP42      | 32             | VP74      | 50             |
+| VP41      | 13             | VP45      | 33             | VP75      | 51             |
+| VP44      | 14             | VP48      | 34             | VP76      | 52             |
+| VP47      | 15             | VP51      | 35             | VP77      | 53             |
+| VP50      | 16             | VP54      | 36             | VP78      | 54             |
+| VP53      | 17             | VP57      | 37             | VP79      | 55             |
+| VP56      | 18             |           |                | VP80      | 56             |
+| VP59      | 19             |           |                |           |                |
 
 3. we are going to calculate how many rows are 5 min, and they are approx. 30000 rows. at the end of each recording there were a period od 5 minutres of resting, which we dont want because the GAN will be confused.
 	Thus, we store this value for the step 4
