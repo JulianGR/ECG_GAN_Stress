@@ -252,7 +252,7 @@ Creating the training set of sine/ECG signals
 """
 
 #Taking normal ECG data for now
-source_filename = './bitalino_train.csv'
+source_filename = './grouptwo_train.csv'
 
 ecg_data = GetECGData(source_file = source_filename,class_id = 0)
 
@@ -268,7 +268,7 @@ print(num_batches)
 
 
 """Creating the Test Set"""
-test_filename =  './bitalino_test.csv'
+test_filename =  './grouptwo_test.csv'
 
 
 ecg_data_test = GetECGData(source_file = test_filename,class_id = 0)
