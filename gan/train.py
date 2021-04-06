@@ -296,7 +296,8 @@ tanh_layer = False
 #No. of training rounds per epoch
 D_rounds = 3
 G_rounds = 1
-num_epoch, max_epoch = 111
+num_epoch= 111
+max_epoch = 111
 learning_rate = 0.0002
 
 #Params for the Discriminator
