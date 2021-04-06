@@ -37,7 +37,7 @@ class MinibatchDiscrimination(nn.Module):
       self.hidden_features = hidden_features
       self.T = nn.Parameter(torch.randn(self.input_features,self.output_features, self.hidden_features))
       if minibatch_normal_init == True:
-        nn.init.normal(self.T, 0,1)
+        nn.init.normal_(self.T, 0,1)
       
    def forward(self,x):
       M = torch.mm(x,self.T.view(self.input_features,-1))
