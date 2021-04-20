@@ -270,8 +270,8 @@ ecg_data = GetECGData(source_file = source_filename,class_id = 0)
 data_loader = torch.utils.data.DataLoader(ecg_data, batch_size=sample_size, shuffle=True)
 num_batches = len(data_loader)
 
-print("num_batches: " + num_batches)
-print("len(ecg_data): " + len(ecg_data))
+print(num_batches)
+print(len(ecg_data))
 
 
 """Creating the Test Set"""
@@ -279,8 +279,8 @@ test_filename =  './test.csv'
 ecg_data_test = GetECGData(source_file = test_filename,class_id = 0)
 data_loader_test = torch.utils.data.DataLoader(ecg_data_test[:], batch_size=sample_size, shuffle=True)
 
-print("len(data_loader_test)): " + len(data_loader_test))
-print("len(ecg_data_test): " + len(ecg_data_test))
+print(len(data_loader_test))
+print(len(ecg_data_test))
 
 
 """##Defining the noise creation function"""
