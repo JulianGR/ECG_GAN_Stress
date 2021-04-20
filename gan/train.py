@@ -250,31 +250,37 @@ def GetECGData(source_file,class_id):
 Creating the training set of sine/ECG signals
 
 """
+# =======WARNING======
+# for making it work: I have established 128 batch size as default.
+# 1st check the columns number. It will be the column number that appears in the csv MINUS 1
+# that is, the first column counts as column 0 while in CVS reads counts as column 1
 
-#Taking normal ECG data for now
-source_filename = './grouptwo_train.csv'
+# 2nd you have to divide the number of rows in both the train and the test file by 128
+# it should be exact, withOUT reminder (you have to manually delete the rows that exceed the division)
 
+#that number will be num_batches and len(data_loader_test)
+
+
+sample_size = 128 
+#batch size needed for Data Loader and the noise creator function.
+
+
+source_filename = './train.csv'
 ecg_data = GetECGData(source_file = source_filename,class_id = 0)
-
-sample_size = 128 #batch size needed for Data Loader and the noise creator function.
-
-# Create loader with data, so that we can iterate over it
-
 data_loader = torch.utils.data.DataLoader(ecg_data, batch_size=sample_size, shuffle=True)
-# Num batches
 num_batches = len(data_loader)
-print(num_batches)
 
+print("num_batches: " + num_batches)
+print("len(ecg_data): " + len(ecg_data))
 
 
 """Creating the Test Set"""
-test_filename =  './grouptwo_test.csv'
-
-
+test_filename =  './test.csv'
 ecg_data_test = GetECGData(source_file = test_filename,class_id = 0)
-
 data_loader_test = torch.utils.data.DataLoader(ecg_data_test[:], batch_size=sample_size, shuffle=True)
 
+print("len(data_loader_test)): " + len(data_loader_test))
+print("len(ecg_data_test): " + len(ecg_data_test))
 
 
 """##Defining the noise creation function"""
