@@ -251,6 +251,10 @@ Creating the training set of sine/ECG signals
 
 """
 # =======WARNING======
+
+# pytorch does the following:
+# floor(number of real rows, the number that appear on the last written row in a csv reader / number of batches)+1 and the number appears in the print ( len(data_loader) )
+#
 # for making it work: I have established 128 batch size as default.
 # 1st check the columns number. It will be the column number that appears in the csv MINUS 1
 # that is, the first column counts as column 0 while in CVS reads counts as column 1
